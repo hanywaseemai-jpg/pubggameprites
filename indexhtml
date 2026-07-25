@@ -1,1 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PULSE — Premium PlayStation Digital Games Store</title>
+<meta name="description" content="Buy PS4 & PS5 digital games — Primary, Secondary and Full Account licenses. Instant delivery, secure payment, best prices.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
 
+<div id="header-root"></div>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="hero-track"></div>
+  <div class="hero-arrows">
+    <button class="hero-arrow prev btn-icon glass">‹</button>
+    <button class="hero-arrow next btn-icon glass">›</button>
+  </div>
+  <div class="hero-nav"></div>
+</section>
+
+<!-- ================= QUICK FILTER BAR ================= -->
+<section class="container" style="margin-top:36px;">
+  <div class="filter-bar glass">
+    <span style="font-size:13px;color:var(--gray-2);font-weight:600;display:flex;align-items:center;gap:8px;">Filter</span>
+    <div class="filter-divider"></div>
+    <button class="filter-chip">PS5</button>
+    <button class="filter-chip">PS4</button>
+    <button class="filter-chip">Primary</button>
+    <button class="filter-chip">Secondary</button>
+    <button class="filter-chip">Full Account</button>
+    <div class="filter-divider"></div>
+    <button class="filter-chip">Action</button>
+    <button class="filter-chip">RPG</button>
+    <button class="filter-chip">Sports</button>
+    <button class="filter-chip">Price ↓</button>
+  </div>
+</section>
+
+<!-- ================= FEATURED ================= -->
+<section class="section" id="featured">
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <span class="section-eyebrow">Handpicked</span>
+        <h2 class="section-title">Featured Games</h2>
+      </div>
+      <a href="category.html" class="see-all" id="featured-see-all">See All</a>
+    </div>
+    <div class="rail" id="featured-rail"></div>
+  </div>
+</section>
+
+<!-- ================= NEW RELEASES ================= -->
+<section class="section" id="new-releases" style="padding-top:0;">
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <span class="section-eyebrow">Just Dropped</span>
+        <h2 class="section-title">New Releases</h2>
+      </div>
+    </div>
+    <div class="rail" id="new-rail"></div>
+  </div>
+</section>
+
+<!-- ================= OFFERS ================= -->
+<section class="section" id="offers" style="padding-top:0;">
+  <div class="container">
+    <div class="offer-banner reveal">
+      <div class="offer-text">
+        <span class="pill blue" style="margin-bottom:14px;display:inline-flex;">Limited Time</span>
+        <h3>Summer Sale — Up to 50% Off</h3>
+        <p>Grab your favorite PS4 & PS5 titles before the offer ends. Primary and Secondary accounts included.</p>
+      </div>
+      <div class="offer-countdown" id="countdown">
+        <div class="cd-box"><b id="cd-d">02</b><span>Days</span></div>
+        <div class="cd-box"><b id="cd-h">14</b><span>Hours</span></div>
+        <div class="cd-box"><b id="cd-m">36</b><span>Min</span></div>
+        <div class="cd-box"><b id="cd-s">09</b><span>Sec</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BEST SELLERS ================= -->
+<section class="section" style="padding-top:0;">
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <span class="section-eyebrow">Fan Favorites</span>
+        <h2 class="section-title">Best Sellers</h2>
+      </div>
+    </div>
+    <div class="rail" id="best-rail"></div>
+  </div>
+</section>
+
+<!-- ================= PS5 GAMES ================= -->
+<section class="section" style="padding-top:0;">
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <span class="section-eyebrow">Next Gen</span>
+        <h2 class="section-title">PS5 Games</h2>
+      </div>
+      <a href="category.html?platform=PS5" class="see-all" id="ps5-see-all">See All</a>
+    </div>
+    <div class="grid" id="ps5-grid"></div>
+  </div>
+</section>
+
+<!-- ================= CATEGORIES ================= -->
+<section class="section" style="padding-top:0;">
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <span class="section-eyebrow">Browse</span>
+        <h2 class="section-title">Shop by Category</h2>
+      </div>
+    </div>
+    <div class="cat-grid" id="cat-grid"></div>
+  </div>
+</section>
+
+<div id="footer-root"></div>
+<div id="toast-wrap"></div>
+
+<script src="js/icons.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script src="js/components.js"></script>
+<script>
+  mountLayout('home');
+  document.getElementById('featured-see-all').innerHTML = 'See All ' + icon('arrowRight');
+  document.getElementById('ps5-see-all').innerHTML = 'See All ' + icon('arrowRight');
+  document.querySelector('.hero-arrow.prev').innerHTML = icon('chevronLeft');
+  document.querySelector('.hero-arrow.next').innerHTML = icon('chevronRight');
+
+  initHeroSlider();
+  renderRailWithSkeleton('#featured-rail', GAMES.filter(g=>g.featured));
+  renderRailWithSkeleton('#new-rail', GAMES.filter(g=>g.newRelease));
+  renderRailWithSkeleton('#best-rail', GAMES.filter(g=>g.bestSeller));
+  renderGridWithSkeleton('#ps5-grid', GAMES.filter(g=>g.platform.includes('PS5')).slice(0,8), 8);
+  renderCategories('#cat-grid');
+  initFilterBar();
+
+  // Countdown
+  (function countdown(){
+    const end = Date.now() + (2*24*3600 + 14*3600 + 36*60 + 9)*1000;
+    function tick(){
+      let diff = Math.max(0, end - Date.now());
+      const d = Math.floor(diff/86400000); diff -= d*86400000;
+      const h = Math.floor(diff/3600000); diff -= h*3600000;
+      const m = Math.floor(diff/60000); diff -= m*60000;
+      const s = Math.floor(diff/1000);
+      document.getElementById('cd-d').textContent = String(d).padStart(2,'0');
+      document.getElementById('cd-h').textContent = String(h).padStart(2,'0');
+      document.getElementById('cd-m').textContent = String(m).padStart(2,'0');
+      document.getElementById('cd-s').textContent = String(s).padStart(2,'0');
+    }
+    tick(); setInterval(tick, 1000);
+  })();
+</script>
+</body>
+</html>
