@@ -3,100 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel | PUBG STORE</title>
+    <title>Advanced Admin | PUBG STORE</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary: #0078FF; --bg-color: #0D1117; --card-bg: #161B22;
-            --text-main: #FFFFFF; --border: rgba(255,255,255,0.1);
-        }
-        body { font-family: 'Poppins', sans-serif; background: var(--bg-color); color: var(--text-main); margin: 0; padding: 20px; }
-        .container { max-width: 1100px; margin: 0 auto; }
-        .glass { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 30px; }
-        h2 { border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 20px; }
-        
-        /* Form Styling */
+        :root { --primary: #0078FF; --bg-color: #0D1117; --card-bg: #161B22; --text-main: #FFFFFF; --border: rgba(255,255,255,0.1); }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg-color); color: var(--text-main); padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .glass { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 25px; margin-bottom: 30px; }
+        .grid-prices { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 15px; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; }
         .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-size: 0.9rem; color: #A3B3BC; }
-        input, select, textarea { 
-            width: 100%; padding: 10px; background: #0D1117; border: 1px solid var(--border); 
-            border-radius: 6px; color: white; outline: none; 
-        }
-        .btn { 
-            background: var(--primary); color: white; border: none; padding: 10px 20px; 
-            border-radius: 6px; cursor: pointer; font-weight: 600; 
-        }
-
-        /* Table Styling */
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
-        th { color: var(--primary); }
-        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; background: #f39c12; color: black; }
-        .status-completed { background: #27ae60; color: white; }
-        .order-actions input { width: 120px; font-size: 0.8rem; margin-bottom: 5px; }
+        label { display: block; margin-bottom: 5px; font-size: 0.85rem; color: #A3B3BC; }
+        input { width: 100%; padding: 12px; background: #0D1117; border: 1px solid var(--border); border-radius: 6px; color: white; box-sizing: border-box; }
+        .btn { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer; font-weight: 600; width: 100%; margin-top: 10px; }
+        h2 { margin-top: 0; font-size: 1.2rem; color: var(--primary); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1><i class="fa-solid fa-lock"></i> Admin Dashboard</h1>
+    <h1><i class="fa-solid fa-gears"></i> Store Control Panel</h1>
 
-    <!-- 1. ADD PRODUCT SECTION -->
+    <!-- ADD PRODUCT WITH MULTIPLE PRICES -->
     <div class="glass">
-        <h2><i class="fa-solid fa-plus"></i> Add New Product</h2>
-        <form id="productForm">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <div class="form-group">
-                    <label>Game Title</label>
-                    <input type="text" id="p-title" placeholder="e.g. PUBG Mobile Account" required>
-                </div>
-                <div class="form-group">
-                    <label>Price ($)</label>
-                    <input type="number" id="p-price" placeholder="25.00" required>
-                </div>
-                <div class="form-group">
-                    <label>Platform</label>
-                    <select id="p-platform">
-                        <option value="PS5">PS5</option>
-                        <option value="PS4">PS4</option>
-                        <option value="PC">PC</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Account Type</label>
-                    <select id="p-type">
-                        <option value="Primary">Primary</option>
-                        <option value="Secondary">Secondary</option>
-                        <option value="Full Account">Full Account</option>
-                    </select>
-                </div>
+        <h2><i class="fa-solid fa-plus-circle"></i> Add New Game Entry</h2>
+        <form id="multiPriceForm">
+            <div class="form-group">
+                <label>Game Title (Display Name)</label>
+                <input type="text" id="title" placeholder="e.g. EA SPORTS FC 26" required>
             </div>
             <div class="form-group">
                 <label>Image URL</label>
-                <input type="text" id="p-image" placeholder="https://example.com/image.jpg">
+                <input type="text" id="image" placeholder="https://..." required>
             </div>
-            <button type="submit" class="btn">Upload Product</button>
+
+            <label><i class="fa-solid fa-tags"></i> Set Prices for each type (Leave empty if not available):</label>
+            <div class="grid-prices">
+                <div class="form-group">
+                    <label>Primary PS5 Price ($)</label>
+                    <input type="number" id="p-ps5" placeholder="0.00">
+                </div>
+                <div class="form-group">
+                    <label>Primary PS4 Price ($)</label>
+                    <input type="number" id="p-ps4" placeholder="0.00">
+                </div>
+                <div class="form-group">
+                    <label>Secondary Price ($)</label>
+                    <input type="number" id="p-secondary" placeholder="0.00">
+                </div>
+                <div class="form-group">
+                    <label>Full Account Price ($)</label>
+                    <input type="number" id="p-full" placeholder="0.00">
+                </div>
+            </div>
+            <button type="submit" class="btn">Upload to Store</button>
         </form>
     </div>
 
-    <!-- 2. ORDERS MANAGEMENT SECTION -->
+    <!-- ORDERS TABLE -->
     <div class="glass">
-        <h2><i class="fa-solid fa-cart-shopping"></i> Customer Orders</h2>
+        <h2><i class="fa-solid fa-box-open"></i> Recent Orders</h2>
         <div style="overflow-x: auto;">
             <table>
                 <thead>
                     <tr>
-                        <th>Product</th>
-                        <th>Email</th>
+                        <th>Game</th>
                         <th>Status</th>
-                        <th>Delivery Info (Login/Pass/2FA)</th>
+                        <th>Account Data (User/Pass/2FA)</th>
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody id="orders-table">
-                    <!-- Orders will load here -->
-                </tbody>
+                <tbody id="orders-table"></tbody>
             </table>
         </div>
     </div>
@@ -108,70 +87,52 @@
     const SUPABASE_KEY = 'sb_publishable_7u2mEODiehfD0JIKKH7hUA_0AoQ5V_u';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // --- 1. Add Product Logic ---
-    document.getElementById('productForm').addEventListener('submit', async (e) => {
+    // Add Multi-price Product
+    document.getElementById('multiPriceForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const product = {
-            title: document.getElementById('p-title').value,
-            price: parseFloat(document.getElementById('p-price').value),
-            platform: document.getElementById('p-platform').value,
-            account_type: document.getElementById('p-type').value,
-            image: document.getElementById('p-image').value
+            title: document.getElementById('title').value,
+            image: document.getElementById('image').value,
+            price_ps5_primary: parseFloat(document.getElementById('p-ps5').value) || null,
+            price_ps4_primary: parseFloat(document.getElementById('p-ps4').value) || null,
+            price_secondary: parseFloat(document.getElementById('p-secondary').value) || null,
+            price_full: parseFloat(document.getElementById('p-full').value) || null,
         };
 
         const { error } = await supabase.from('products').insert([product]);
         if (error) alert('Error: ' + error.message);
-        else { alert('Product added successfully!'); e.target.reset(); }
+        else { alert('Game added with multi-pricing!'); e.target.reset(); }
     });
 
-    // --- 2. Load & Manage Orders ---
+    // Load Orders
     async function loadOrders() {
-        const { data: orders, error } = await supabase
-            .from('orders')
-            .select('*')
-            .order('created_at', { ascending: false });
-
-        if (error) return console.error(error);
-
+        const { data: orders } = await supabase.from('orders').select('*').order('created_at', {ascending: false});
         const tbody = document.getElementById('orders-table');
         tbody.innerHTML = orders.map(order => `
             <tr>
-                <td>${order.product_title}</td>
-                <td>${order.customer_email}</td>
-                <td><span class="status-badge ${order.status === 'Completed' ? 'status-completed' : ''}">${order.status}</span></td>
-                <td class="order-actions">
-                    <input type="text" id="user-${order.id}" placeholder="Username" value="${order.game_username || ''}"><br>
-                    <input type="text" id="pass-${order.id}" placeholder="Password" value="${order.game_password || ''}"><br>
-                    <input type="text" id="2fa-${order.id}" placeholder="2FA Code" value="${order.two_fa_code || ''}">
-                </td>
+                <td><b>${order.product_title}</b><br><small>${order.customer_email}</small></td>
+                <td>${order.status}</td>
                 <td>
-                    <button class="btn" onclick="fulfillOrder('${order.id}')" style="padding: 5px 10px; font-size: 0.8rem;">
-                        Save & Complete
-                    </button>
+                    <input type="text" id="u-${order.id}" placeholder="User" value="${order.game_username || ''}" style="margin-bottom:2px">
+                    <input type="text" id="p-${order.id}" placeholder="Pass" value="${order.game_password || ''}" style="margin-bottom:2px">
+                    <input type="text" id="f-${order.id}" placeholder="2FA" value="${order.two_fa_code || ''}">
                 </td>
+                <td><button onclick="saveOrder('${order.id}')" style="cursor:pointer">Save</button></td>
             </tr>
         `).join('');
     }
 
-    async function fulfillOrder(orderId) {
-        const username = document.getElementById(`user-${orderId}`).value;
-        const password = document.getElementById(`pass-${orderId}`).value;
-        const twoFa = document.getElementById(`2fa-${orderId}`).value;
-
-        const { error } = await supabase
-            .from('orders')
-            .update({ 
-                game_username: username, 
-                game_password: password, 
-                two_fa_code: twoFa,
-                status: 'Completed' 
-            })
-            .eq('id', orderId);
-
-        if (error) alert('Update failed!');
-        else { alert('Order fulfilled!'); loadOrders(); }
+    async function saveOrder(id) {
+        const update = {
+            game_username: document.getElementById(`u-${id}`).value,
+            game_password: document.getElementById(`p-${id}`).value,
+            two_fa_code: document.getElementById(`f-${id}`).value,
+            status: 'Completed'
+        };
+        await supabase.from('orders').update(update).eq('id', id);
+        alert('Data Sent to Customer!');
+        loadOrders();
     }
-
     loadOrders();
 </script>
 </body>
