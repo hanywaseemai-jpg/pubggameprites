@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Browse Games — PULSE</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+
+<div id="header-root"></div>
+
+<section class="cat-hero">
+  <div class="container">
+    <div class="cat-hero-icon" id="cat-icon"></div>
+    <h1 id="cat-title">All Games</h1>
+    <p id="cat-desc">Browse our full library of PS4 and PS5 digital titles across every genre.</p>
+    <div class="cat-pill-row" id="cat-pills"></div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:20px;">
+  <div class="container">
+    <div class="filter-bar glass">
+      <span style="font-size:13px;color:var(--gray-2);font-weight:600;">Filter</span>
+      <div class="filter-divider"></div>
+      <button class="filter-chip" data-filter="platform" data-value="PS5">PS5</button>
+      <button class="filter-chip" data-filter="platform" data-value="PS4">PS4</button>
+      <div class="filter-divider"></div>
+      <button class="filter-chip" data-filter="type" data-value="primary">Primary</button>
+      <button class="filter-chip" data-filter="type" data-value="secondary">Secondary</button>
+      <button class="filter-chip" data-filter="type" data-value="full">Full Account</button>
+      <div class="filter-divider"></div>
+      <select id="sort-select" class="filter-chip" style="appearance:none;padding-right:16px;">
+        <option value="popular">Sort: Popular</option>
+        <option value="price-low">Price: Low to High</option>
+        <option value="price-high">Price: High to Low</option>
+        <option value="newest">Newest</option>
+      </select>
+    </div>
+
+    <p class="text-gray" id="result-count" style="margin-bottom:20px;font-size:14px;"></p>
+    <div class="grid" id="results-grid"></div>
+    <p id="empty-state" style="display:none;text-align:center;padding:60px 0;color:var(--gray-2);">No games match these filters. Try adjusting your selection.</p>
+  </div>
+</section>
+
+<div id="footer-root"></div>
+<div id="toast-wrap"></div>
+
+<script src="js/icons.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script src="js/components.js"></script>
+<script>
+  mountLayout('category');
+  document.getElementById('cat-icon').innerHTML = icon('compass');
+  document.querySelector('.filter-bar span').innerHTML = icon('filter') + ' Filter';
+
+  const params = new URLSearchParams(location.search);
+  const catName = params.get('name');
+  const platformParam = params.get('platform');
+
+  if(catName){
+    document.getElementById('cat-title').textContent = catName + ' Games';
+    document.getElementById('cat-desc').textContent = `Explore our collection of ${catName} titles for PS4 and PS5.`;
+    const catData = CATEGORIES.find(c=>c.name===catName);
+    if(catData) document.getElementById('cat-icon').innerHTML = icon(catData.icon);
+  } else if(platformParam){
+    document.getElementById('cat-title').textContent = platformParam + ' Games';
+    document.getElementById('cat-desc').textContent = `Every digital title available on ${platformParam}.`;
+  }
+
+  // Category pills
+  document.getElementById('cat-pills').innerHTML = CATEGORIES.map(c=>`
+    <a href="category.html?name=${encodeURIComponent(c.name)}" class="filter-chip ${c.name===catName?'active':''}" style="text-decoration:none;">${c.name}</a>
+  `).join('');
+
+  let activeFilters = { platform:new Set(), type:new Set() };
+  if(platformParam) activeFilters.platform.add(platformParam);
+
+  function applyFilters(){
+    let list = [...GAMES];
+    if(catName) list = list.filter(g=> g.genre.includes(catName));
+    if(activeFilters.platform.size) list = list.filter(g=> g.platform.some(p=>activeFilters.platform.has(p)));
+    if(activeFilters.type.size){
+      list = list.filter(g=> [...activeFilters.type].some(t=> g.price[t] > 0 && g.stock[t] > 0));
+    }
+    const sort = document.getElementById('sort-select').value;
+    if(sort==='price-low') list.sort((a,b)=>a.price.primary-b.price.primary);
+    if(sort==='price-high') list.sort((a,b)=>b.price.primary-a.price.primary);
+    if(sort==='newest') list.sort((a,b)=> new Date(b.releaseDate)-new Date(a.releaseDate));
+    if(sort==='popular') list.sort((a,b)=> b.reviewCount-a.reviewCount);
+    return list;
+  }
+
+  function render(){
+    const list = applyFilters();
+    document.getElementById('result-count').textContent = `${list.length} game${list.length===1?'':'s'} found`;
+    renderGridWithSkeleton('#results-grid', list, list.length || 4);
+    document.getElementById('empty-state').style.display = list.length ? 'none' : 'block';
+  }
+
+  document.querySelectorAll('.filter-chip[data-filter]').forEach(chip=>{
+    if(activeFilters[chip.dataset.filter].has(chip.dataset.value)) chip.classList.add('active');
+    chip.addEventListener('click', ()=>{
+      const set = activeFilters[chip.dataset.filter];
+      const val = chip.dataset.value;
+      if(set.has(val)){ set.delete(val); chip.classList.remove('active'); }
+      else { set.add(val); chip.classList.add('active'); }
+      render();
+    });
+  });
+  document.getElementById('sort-select').addEventListener('change', render);
+
+  render();
+</script>
+</body>
+</html>

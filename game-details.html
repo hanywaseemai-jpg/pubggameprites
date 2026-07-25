@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Details — PULSE</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+
+<div id="header-root"></div>
+
+<div class="gd-bg" id="gd-bg"><img src="" alt=""></div>
+
+<div class="container">
+  <div class="breadcrumb"></div>
+</div>
+
+<section class="gd-hero">
+  <div class="container" id="gd-content"></div>
+</section>
+
+<section class="section related-wrap">
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <span class="section-eyebrow">You Might Also Like</span>
+        <h2 class="section-title">Related Games</h2>
+      </div>
+    </div>
+    <div class="rail" id="related-rail"></div>
+  </div>
+</section>
+
+<div id="footer-root"></div>
+<div id="toast-wrap"></div>
+
+<script src="js/icons.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script src="js/components.js"></script>
+<script>
+  mountLayout('');
+
+  const params = new URLSearchParams(location.search);
+  const slug = params.get('slug') || GAMES[0].slug;
+  const game = getGameBySlug(slug) || GAMES[0];
+  document.title = game.title + ' — PULSE';
+
+  // Breadcrumb
+  document.querySelector('.breadcrumb').innerHTML =
+    '<a href="index.html">Home</a>' + icon('chevronRight') +
+    '<a href="category.html?name=' + encodeURIComponent(game.genre[0]) + '">' + game.genre[0] + '</a>' +
+    icon('chevronRight') +
+    '<span class="current">' + game.title + '</span>';
+
+  // BG
+  const bgImg = document.querySelector('#gd-bg img');
+  bgImg.src = game.gallery[0] || game.cover;
+  bgImg.alt = game.title;
+
+  let selectedType = game.stock.primary > 0 ? 'primary' : (game.stock.secondary > 0 ? 'secondary' : 'full');
+
+  function buyOptionCard(type, label, desc){
+    const price = game.price[type];
+    const stock = game.stock[type];
+    const disabled = !price || stock <= 0;
+    const stockLabel = disabled ? 'Out of stock' : (stock <= 5 ? `Only ${stock} left` : `${stock} in stock`);
+    const stockClass = disabled ? 'out' : (stock <= 5 ? 'low' : '');
+    return `
+      <div class="buy-opt ${selectedType===type && !disabled ? 'selected':''} ${disabled?'is-disabled':''}"
+           style="${disabled ? 'opacity:.45;pointer-events:none;' : ''}"
+           data-type="${type}" onclick="selectBuyType('${type}')">
+        <div class="check-dot"></div>
+        <div class="opt-label">${label}</div>
+        <div class="opt-price">${price ? '$'+price : '—'}</div>
+        <div class="opt-stock ${stockClass}">${stockLabel}</div>
+        <div class="opt-desc">${desc}</div>
+      </div>
+    `;
+  }
+
+  function renderGameDetails(){
+    const wished = Store.isWishlisted(game.id);
+    document.getElementById('gd-content').innerHTML = `
+      <div class="gd-layout">
+        <div class="gd-cover reveal">
+          <img src="${game.cover}" alt="${game.title}">
+        </div>
+        <div class="gd-info">
+          <div class="platform-tags">
+            ${game.platform.map(p=>`<span class="pill blue">${p}</span>`).join('')}
+            ${game.newRelease ? '<span class="pill">New Release</span>':''}
+            ${game.bestSeller ? '<span class="pill gold">Best Seller</span>':''}
+          </div>
+          <h1 class="gd-title reveal">${game.title}</h1>
+          <div class="gd-meta-row reveal">
+            <div class="gd-stars">${Array.from({length:5}).map((_,i)=>icon('star')).join('')}</div>
+            <span style="font-size:13.5px;color:var(--gray-2);">${game.rating} (${game.reviewCount.toLocaleString()} reviews)</span>
+            <div class="gd-meta-item">${icon('building')} ${game.publisher}</div>
+            <div class="gd-meta-item">${icon('calendar')} ${formatDate(game.releaseDate)}</div>
+          </div>
+          <p class="gd-desc reveal">${game.description}</p>
+
+          <div class="gd-specs reveal">
+            <div class="spec-item"><span>Platform</span><b>${game.platform.join(', ')}</b></div>
+            <div class="spec-item"><span>Region</span><b>${game.region}</b></div>
+            <div class="spec-item"><span>Size</span><b>${game.size}</b></div>
+            <div class="spec-item"><span>Languages</span><b>${game.languages.join(', ')}</b></div>
+            <div class="spec-item"><span>Genre</span><b>${game.genre.join(', ')}</b></div>
+            <div class="spec-item"><span>Publisher</span><b>${game.publisher}</b></div>
+          </div>
+
+          <div class="buy-box glass reveal">
+            <h4>Choose License Type</h4>
+            <div class="buy-options" id="buy-options">
+              ${buyOptionCard('primary','Primary','Play on your own account. Full ownership transferred.')}
+              ${buyOptionCard('secondary','Secondary','Shared account access. Cannot change email/password.')}
+              ${buyOptionCard('full','Full Account','Complete account handover with email access.')}
+            </div>
+            <div class="buy-actions">
+              <button class="btn btn-primary" id="add-cart-btn">${icon('cart')} Add to Cart</button>
+              <button class="btn btn-ghost" id="wish-btn">${icon('heart')} ${wished ? 'Wishlisted' : 'Wishlist'}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gd-tabs reveal">
+        <button class="gd-tab active" data-tab="media">Media</button>
+        <button class="gd-tab" data-tab="reviews">Reviews (${game.reviewCount.toLocaleString()})</button>
+      </div>
+
+      <div class="gd-tab-panel active" data-panel="media">
+        <div class="trailer-wrap" style="margin-bottom:20px;">
+          <iframe src="https://www.youtube.com/embed/${game.trailer}" title="Trailer" frameborder="0" allowfullscreen loading="lazy"></iframe>
+        </div>
+        <div class="gallery-strip">
+          ${game.gallery.map(src=>`<img src="${src}" alt="${game.title} screenshot" loading="lazy">`).join('')}
+        </div>
+      </div>
+
+      <div class="gd-tab-panel" data-panel="reviews">
+        <div class="review-summary">
+          <div class="review-score">
+            <b>${game.rating}</b>
+            <div class="gd-stars">${Array.from({length:5}).map(()=>icon('star')).join('')}</div>
+            <span style="font-size:12.5px;color:var(--gray-2);">${game.reviewCount.toLocaleString()} ratings</span>
+          </div>
+          <div class="review-bars">
+            ${[5,4,3,2,1].map(n=>`
+              <div class="review-bar-row">
+                <span>${n}★</span>
+                <div class="review-bar-track"><div class="review-bar-fill" style="width:${n===5?68:n===4?22:n===3?7:n===2?2:1}%"></div></div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        <div id="review-list">
+          ${REVIEWS.map(r=>`
+            <div class="review-card">
+              <div class="review-avatar">${r.name.charAt(0)}</div>
+              <div class="review-body">
+                <div class="review-top">
+                  <span class="review-name">${r.name}</span>
+                  <span class="review-date">${r.date}</span>
+                </div>
+                <div class="gd-stars">${Array.from({length:r.rating}).map(()=>icon('star')).join('')}</div>
+                <p class="review-text">${r.text}</p>
+                <button class="review-like">${icon('thumbsUp')} Helpful (${r.likes})</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+
+    initScrollReveal();
+    bindGdInteractions();
+  }
+
+  function selectBuyType(type){
+    if(!game.price[type] || game.stock[type] <= 0) return;
+    selectedType = type;
+    document.querySelectorAll('.buy-opt').forEach(el=>{
+      el.classList.toggle('selected', el.dataset.type === type);
+    });
+  }
+
+  function bindGdInteractions(){
+    document.querySelectorAll('.gd-tab').forEach(tab=>{
+      tab.addEventListener('click', ()=>{
+        document.querySelectorAll('.gd-tab').forEach(t=>t.classList.remove('active'));
+        document.querySelectorAll('.gd-tab-panel').forEach(p=>p.classList.remove('active'));
+        tab.classList.add('active');
+        document.querySelector(`.gd-tab-panel[data-panel="${tab.dataset.tab}"]`).classList.add('active');
+      });
+    });
+
+    document.getElementById('add-cart-btn').addEventListener('click', ()=>{
+      Store.addToCart(game.id, selectedType, game.price[selectedType]);
+    });
+
+    document.getElementById('wish-btn').addEventListener('click', (e)=>{
+      const added = Store.toggleWishlist(game.id);
+      e.currentTarget.innerHTML = icon('heart') + ' ' + (added ? 'Wishlisted' : 'Wishlist');
+    });
+  }
+
+  renderGameDetails();
+
+  // Related games — same genre, excluding current
+  const related = GAMES.filter(g=> g.id!==game.id && g.genre.some(gg=>game.genre.includes(gg))).slice(0,8);
+  renderRailWithSkeleton('#related-rail', related.length ? related : GAMES.filter(g=>g.id!==game.id).slice(0,6));
+</script>
+</body>
+</html>
