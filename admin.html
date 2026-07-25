@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | PUBG STORE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0078FF; --bg-color: #0D1117; --card-bg: #161B22;
+            --text-main: #FFFFFF; --border: rgba(255,255,255,0.1);
+        }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg-color); color: var(--text-main); margin: 0; padding: 20px; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .glass { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 30px; }
+        h2 { border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 20px; }
+        
+        /* Form Styling */
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-size: 0.9rem; color: #A3B3BC; }
+        input, select, textarea { 
+            width: 100%; padding: 10px; background: #0D1117; border: 1px solid var(--border); 
+            border-radius: 6px; color: white; outline: none; 
+        }
+        .btn { 
+            background: var(--primary); color: white; border: none; padding: 10px 20px; 
+            border-radius: 6px; cursor: pointer; font-weight: 600; 
+        }
+
+        /* Table Styling */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { color: var(--primary); }
+        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; background: #f39c12; color: black; }
+        .status-completed { background: #27ae60; color: white; }
+        .order-actions input { width: 120px; font-size: 0.8rem; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1><i class="fa-solid fa-lock"></i> Admin Dashboard</h1>
+
+    <!-- 1. ADD PRODUCT SECTION -->
+    <div class="glass">
+        <h2><i class="fa-solid fa-plus"></i> Add New Product</h2>
+        <form id="productForm">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-group">
+                    <label>Game Title</label>
+                    <input type="text" id="p-title" placeholder="e.g. PUBG Mobile Account" required>
+                </div>
+                <div class="form-group">
+                    <label>Price ($)</label>
+                    <input type="number" id="p-price" placeholder="25.00" required>
+                </div>
+                <div class="form-group">
+                    <label>Platform</label>
+                    <select id="p-platform">
+                        <option value="PS5">PS5</option>
+                        <option value="PS4">PS4</option>
+                        <option value="PC">PC</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Account Type</label>
+                    <select id="p-type">
+                        <option value="Primary">Primary</option>
+                        <option value="Secondary">Secondary</option>
+                        <option value="Full Account">Full Account</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Image URL</label>
+                <input type="text" id="p-image" placeholder="https://example.com/image.jpg">
+            </div>
+            <button type="submit" class="btn">Upload Product</button>
+        </form>
+    </div>
+
+    <!-- 2. ORDERS MANAGEMENT SECTION -->
+    <div class="glass">
+        <h2><i class="fa-solid fa-cart-shopping"></i> Customer Orders</h2>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th>Delivery Info (Login/Pass/2FA)</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="orders-table">
+                    <!-- Orders will load here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    const SUPABASE_URL = 'https://jifmdblddcqzlrkbaacv.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_7u2mEODiehfD0JIKKH7hUA_0AoQ5V_u';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // --- 1. Add Product Logic ---
+    document.getElementById('productForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const product = {
+            title: document.getElementById('p-title').value,
+            price: parseFloat(document.getElementById('p-price').value),
+            platform: document.getElementById('p-platform').value,
+            account_type: document.getElementById('p-type').value,
+            image: document.getElementById('p-image').value
+        };
+
+        const { error } = await supabase.from('products').insert([product]);
+        if (error) alert('Error: ' + error.message);
+        else { alert('Product added successfully!'); e.target.reset(); }
+    });
+
+    // --- 2. Load & Manage Orders ---
+    async function loadOrders() {
+        const { data: orders, error } = await supabase
+            .from('orders')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) return console.error(error);
+
+        const tbody = document.getElementById('orders-table');
+        tbody.innerHTML = orders.map(order => `
+            <tr>
+                <td>${order.product_title}</td>
+                <td>${order.customer_email}</td>
+                <td><span class="status-badge ${order.status === 'Completed' ? 'status-completed' : ''}">${order.status}</span></td>
+                <td class="order-actions">
+                    <input type="text" id="user-${order.id}" placeholder="Username" value="${order.game_username || ''}"><br>
+                    <input type="text" id="pass-${order.id}" placeholder="Password" value="${order.game_password || ''}"><br>
+                    <input type="text" id="2fa-${order.id}" placeholder="2FA Code" value="${order.two_fa_code || ''}">
+                </td>
+                <td>
+                    <button class="btn" onclick="fulfillOrder('${order.id}')" style="padding: 5px 10px; font-size: 0.8rem;">
+                        Save & Complete
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    async function fulfillOrder(orderId) {
+        const username = document.getElementById(`user-${orderId}`).value;
+        const password = document.getElementById(`pass-${orderId}`).value;
+        const twoFa = document.getElementById(`2fa-${orderId}`).value;
+
+        const { error } = await supabase
+            .from('orders')
+            .update({ 
+                game_username: username, 
+                game_password: password, 
+                two_fa_code: twoFa,
+                status: 'Completed' 
+            })
+            .eq('id', orderId);
+
+        if (error) alert('Update failed!');
+        else { alert('Order fulfilled!'); loadOrders(); }
+    }
+
+    loadOrders();
+</script>
+</body>
+</html>
