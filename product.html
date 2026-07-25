@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product | PUBG STORE</title>
+    
+    <meta name="description" content="View product details and purchase premium game accounts.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #0078FF;
+            --primary-dark: #0059C8;
+            --accent: #00A8FF;
+            --bg-color: #F5F7FA;
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --text-main: #0D1117;
+            --text-muted: #666666;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            --header-bg: rgba(245, 247, 250, 0.85);
+            --skeleton-bg: #e2e5e9;
+            --skeleton-shine: #f0f2f5;
+            --success: #00C853;
+            --danger: #FF4757;
+            --warning: #FFA502;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0D1117;
+            --card-bg: rgba(22, 27, 34, 0.6);
+            --text-main: #FFFFFF;
+            --text-muted: #A3B3BC;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            --header-bg: rgba(13, 17, 23, 0.85);
+            --skeleton-bg: #161B22;
+            --skeleton-shine: #1f2630;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        button { border: none; outline: none; background: none; cursor: pointer; font-family: inherit; }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .glass {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--glass-shadow);
+            border-radius: 16px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #FFF;
+            box-shadow: 0 4px 15px rgba(0, 120, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 120, 255, 0.4);
+            color: #FFF;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-lg {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            width: 100%;
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple-anim 600ms linear;
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        @keyframes ripple-anim { to { transform: scale(4); opacity: 0; } }
+
+        /* ================== NAVBAR ================== */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: var(--header-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-container { display: flex; justify-content: space-between; align-items: center; height: 80px; }
+        .logo { font-size: 1.8rem; font-weight: 800; color: var(--text-main); letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
+        .logo i { color: var(--primary); }
+
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        .nav-links a { font-weight: 500; font-size: 1rem; position: relative; color: var(--text-muted); transition: color 0.3s ease; }
+        .nav-links a:hover, .nav-links a.active { color: var(--text-main); }
+        .nav-links a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--primary); transition: width 0.3s ease; }
+        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+        .nav-actions { display: flex; align-items: center; gap: 1.5rem; }
+        .icon-btn { font-size: 1.2rem; color: var(--text-main); transition: transform 0.3s ease, color 0.3s ease; position: relative; background: none; border: none; cursor: pointer; }
+        .icon-btn:hover { color: var(--primary); transform: translateY(-2px); }
+        .badge-count { position: absolute; top: -8px; right: -8px; background: var(--primary); color: #fff; font-size: 0.7rem; font-weight: 700; height: 18px; width: 18px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+        .mobile-toggle { display: none; font-size: 1.5rem; color: var(--text-main); }
+
+        /* ================== BREADCRUMB ================== */
+        .breadcrumb {
+            margin-top: 100px;
+            padding: 1rem 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        .breadcrumb a { color: var(--text-muted); transition: color 0.3s; }
+        .breadcrumb a:hover { color: var(--primary); }
+        .breadcrumb span { margin: 0 8px; }
+
+        /* ================== PRODUCT HERO ================== */
+        .product-hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+            align-items: start;
+        }
+
+        .product-gallery {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+        }
+
+        .product-gallery .main-image {
+            width: 100%;
+            aspect-ratio: 3/4;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-badges {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 2;
+        }
+
+        .badge {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            backdrop-filter: blur(8px);
+            color: #FFF;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge.ps5 { background: rgba(0, 67, 156, 0.9); }
+        .badge.ps4 { background: rgba(0, 55, 145, 0.9); }
+        .badge.pc { background: rgba(23, 26, 33, 0.9); }
+        .badge.sale { background: var(--danger); }
+        .badge.hot { background: var(--warning); color: #000; }
+
+        .discount-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: var(--danger);
+            color: #FFF;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 1rem;
+            z-index: 2;
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
+        }
+
+        .gallery-thumbs {
+            display: flex;
+            gap: 10px;
+            padding: 1rem;
+            justify-content: center;
+        }
+
+        .gallery-thumbs img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+
+        .gallery-thumbs img:hover,
+        .gallery-thumbs img.active {
+            border-color: var(--primary);
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        /* Product Info */
+        .product-info-section {
+            padding: 0.5rem 0;
+        }
+
+        .product-vendor {
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .stars {
+            color: #FFD700;
+            font-size: 1rem;
+        }
+
+        .rating-count {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .info-row {
+            margin-bottom: 1.2rem;
+        }
+
+        .info-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .info-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .info-tag {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-main);
+            background: var(--bg-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .info-tag:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .info-tag.active {
+            background: var(--primary);
+            color: #FFF;
+            border-color: var(--primary);
+            box-shadow: 0 4px 15px rgba(0, 120, 255, 0.3);
+        }
+
+        .product-price-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+            padding: 1.5rem 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .price-current {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .price-old {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            text-decoration: line-through;
+        }
+
+        .price-badge {
+            background: var(--danger);
+            color: #FFF;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .shipping-note {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .shipping-note a {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+
+        .feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .feature-item i {
+            color: var(--primary);
+            font-size: 1.1rem;
+            width: 24px;
+        }
+
+        .quantity-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .quantity-label {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .quantity-control button {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-color);
+            color: var(--text-main);
+            font-size: 1.2rem;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .quantity-control button:hover {
+            background: var(--primary);
+            color: #FFF;
+        }
+
+        .quantity-control input {
+            width: 50px;
+            height: 40px;
+            text-align: center;
+            border: none;
+            background: transparent;
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .terms-check {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .terms-check input {
+            margin-top: 3px;
+            accent-color: var(--primary);
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .terms-check a {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .btn-wishlist {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        .btn-wishlist:hover {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        /* ================== INSTRUCTIONS ================== */
+        .instructions-section {
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .accordion-item {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+        }
+
+        .accordion-header {
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+
+        .accordion-header:hover {
+            background: rgba(0, 120, 255, 0.05);
+        }
+
+        .accordion-header i {
+            transition: transform 0.3s ease;
+            color: var(--text-muted);
+        }
+
+        .accordion-item.active .accordion-header i {
+            transform: rotate(180deg);
+        }
+
+        .accordion-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            padding: 0 1.5rem;
+        }
+
+        .accordion-item.active .accordion-body {
+            max-height: 500px;
+            padding: 0 1.5rem 1.5rem;
+        }
+
+        .accordion-body ul {
+            list-style: disc;
+            padding-right: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        .accordion-body ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 0.5rem;
+        }
+
+        .type-badge .stars-small {
+            color: #FFD700;
+            font-size: 0.8rem;
+        }
+
+        /* ================== YOU MAY ALSO LIKE ================== */
+        .recommendations {
+            margin-bottom: 4rem;
+        }
+
+        .rec-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .rec-title {
+            font-size: 2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .rec-nav {
+            display: flex;
+            gap: 10px;
+        }
+
+        .rec-nav button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .rec-nav button:hover {
+            background: var(--primary);
+            color: #FFF;
+            border-color: var(--primary);
+        }
+
+        .rec-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+
+        .rec-card {
+            border-radius: 16px;
+            overflow: hidden;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        .rec-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 120, 255, 0.15);
+        }
+
+        .rec-image {
+            position: relative;
+            padding-top: 100%;
+            overflow: hidden;
+            background: #1a1a2e;
+        }
+
+        .rec-image img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .rec-card:hover .rec-image img {
+            transform: scale(1.1);
+        }
+
+        .rec-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: var(--danger);
+            color: #FFF;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .rec-info {
+            padding: 1rem;
+        }
+
+        .rec-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .rec-price-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .rec-price {
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .rec-old-price {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-decoration: line-through;
+        }
+
+        /* ================== NEWSLETTER ================== */
+        .newsletter-section {
+            background: linear-gradient(135deg, #FF006E 0%, #FF4D9E 100%);
+            padding: 4rem 0;
+            text-align: center;
+            margin-bottom: 0;
+        }
+
+        .newsletter-title {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #FFF;
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+
+        .newsletter-desc {
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .newsletter-form {
+            max-width: 500px;
+            margin: 0 auto;
+            display: flex;
+            gap: 0;
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: none;
+            background: transparent;
+            color: #FFF;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .newsletter-form input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .newsletter-form button {
+            padding: 0 1.5rem;
+            background: transparent;
+            border: none;
+            color: #FFF;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .newsletter-form button:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* ================== FOOTER ================== */
+        footer {
+            background: #1a1a1a;
+            border-top: 1px solid var(--border-color);
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-social {
+            text-align: center;
+            padding: 2rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .social-links a {
+            color: #FFF;
+            font-size: 1.3rem;
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .social-links a:hover {
+            color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-desc {
+            color: var(--text-muted);
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            color: #FFF;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .payment-icons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .payment-icons img {
+            height: 24px;
+            border-radius: 4px;
+        }
+
+        /* ================== RESPONSIVE ================== */
+        @media (max-width: 1024px) {
+            .rec-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { position: fixed; top: 80px; left: -100%; width: 100%; height: calc(100vh - 80px); background: var(--bg-color); flex-direction: column; justify-content: center; transition: left 0.4s ease; z-index: 999; }
+            .nav-links.active { left: 0; }
+            .mobile-toggle { display: block; }
+            .product-hero { grid-template-columns: 1fr; }
+            .rec-grid { grid-template-columns: 1fr 1fr; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+            .newsletter-title { font-size: 2rem; }
+        }
+
+        @media (max-width: 480px) {
+            .rec-grid { grid-template-columns: 1fr; }
+            .product-title { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================== NAVBAR ================== -->
+    <header id="header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-gamepad"></i> PUBG STORE
+            </a>
+            
+            <nav class="nav-links" id="nav-links">
+                <a href="index.html">Home</a>
+                <a href="store.html">Store</a>
+                <a href="store.html?filter=offers">Offers</a>
+                <a href="orders.html">Orders</a>
+            </nav>
+
+            <div class="nav-actions">
+                <button class="icon-btn" id="theme-toggle"><i class="fa-solid fa-moon"></i></button>
+                <a href="wishlist.html" class="icon-btn">
+                    <i class="fa-regular fa-heart"></i>
+                    <span class="badge-count">0</span>
+                </a>
+                <a href="cart.html" class="icon-btn">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="badge-count">0</span>
+                </a>
+                <a href="login.html" class="icon-btn"><i class="fa-regular fa-user"></i></a>
+                <button class="mobile-toggle icon-btn" id="mobile-toggle"><i class="fa-solid fa-bars"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ================== BREADCRUMB ================== -->
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="index.html">Home</a>
+            <span>/</span>
+            <a href="store.html">Store</a>
+            <span>/</span>
+            <span style="color: var(--text-main); font-weight: 600;">EA SPORTS FC 26</span>
+        </div>
+    </div>
+
+    <!-- ================== PRODUCT HERO ================== -->
+    <div class="container">
+        <div class="product-hero">
+            
+            <!-- Gallery -->
+            <div class="product-gallery glass">
+                <div style="position: relative;">
+                    <img id="mainImage" src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800&auto=format&fit=crop" class="main-image" alt="Product Image">
+                    <div class="gallery-badges">
+                        <span class="badge ps5">PS5</span>
+                        <span class="badge ps4">PS4</span>
+                    </div>
+                    <div class="discount-badge">-63%</div>
+                </div>
+                <div class="gallery-thumbs">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=200&auto=format&fit=crop" class="active" onclick="changeImage(this)" alt="Thumb 1">
+                    <img src="https://images.unsplash.com/photo-1552820728-8b83bb6b2b0a?q=80&w=200&auto=format&fit=crop" onclick="changeImage(this)" alt="Thumb 2">
+                    <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=200&auto=format&fit=crop" onclick="changeImage(this)" alt="Thumb 3">
+                    <img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?q=80&w=200&auto=format&fit=crop" onclick="changeImage(this)" alt="Thumb 4">
+                </div>
+            </div>
+
+            <!-- Info -->
+            <div class="product-info-section">
+                <div class="product-vendor">PUBG STORE</div>
+                <h1 class="product-title">EA SPORTS FC™ 26 Standard Edition (PS5/PS4) [Digital Account]</h1>
+                
+                <div class="product-rating">
+                    <span class="stars">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star-half-stroke"></i>
+                    </span>
+                    <span class="rating-count">4.8 (127 reviews)</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">Language</span>
+                    <div class="info-tags">
+                        <span class="info-tag active">English menus / En-Ar Voice</span>
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">Select Version</span>
+                    <div class="info-tags" id="versionTags">
+                        <span class="info-tag active" data-price="650" data-old="1775" onclick="selectVersion(this)">Primary PS5</span>
+                        <span class="info-tag" data-price="550" data-old="1500" onclick="selectVersion(this)">Primary PS4</span>
+                        <span class="info-tag" data-price="450" data-old="1200" onclick="selectVersion(this)">Secondary</span>
+                        <span class="info-tag" data-price="900" data-old="2500" onclick="selectVersion(this)">Full Access</span>
+                    </div>
+                </div>
+
+                <div class="product-price-row">
+                    <span class="price-current" id="currentPrice">LE 650.00 EGP</span>
+                    <span class="price-old" id="oldPrice">LE 1,775.00 EGP</span>
+                    <span class="price-badge">Sale</span>
+                </div>
+
+                <p class="shipping-note">
+                    <a href="#">Shipping</a> calculated at checkout.
+                </p>
+
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <i class="fa-solid fa-bolt"></i>
+                        <span>INSTANT DELIVERY</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fa-solid fa-box-open"></i>
+                        <span>Game Size : 100 GB</span>
+                    </div>
+                </div>
+
+                <div class="quantity-row">
+                    <span class="quantity-label">Quantity</span>
+                    <div class="quantity-control">
+                        <button onclick="updateQty(-1)">-</button>
+                        <input type="text" id="qtyInput" value="1" readonly>
+                        <button onclick="updateQty(1)">+</button>
+                    </div>
+                </div>
+
+                <div class="terms-check">
+                    <input type="checkbox" id="termsCheck">
+                    <label for="termsCheck">I agree to the <a href="#">Refund Policy</a> & <a href="#">Game Share Terms</a> and understand that all sales are final for digital products.</label>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary btn-lg ripple" id="buyBtn" onclick="addToCart()">
+                        <i class="fa-solid fa-cart-plus"></i> Add to Cart
+                    </button>
+                    <button class="btn btn-secondary btn-lg ripple" onclick="toggleWishlist()">
+                        <i class="fa-regular fa-heart"></i> Add to Wishlist
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================== INSTRUCTIONS ================== -->
+    <div class="container">
+        <div class="instructions-section">
+            <h2 class="section-title"><i class="fa-solid fa-circle-info" style="color: var(--primary);"></i> Instructions [Important]</h2>
+            
+            <div class="accordion">
+                <div class="accordion-item active">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="type-badge">
+                            <span class="stars-small"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></span>
+                            <span>الرئيسي (Primary):</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-body">
+                        <ul>
+                            <li>اللعبة أو البلس اللي على الأكاونت بيشتغل لكل اليوزرات اللي على الجهاز.</li>
+                            <li>زي أي حد عنده يوزر على نفس الجهاز يقدر يلعب اللعبة أو يستخدم البلس.</li>
+                            <li>بس لازم تعرف إن البرايماري بيشتغل على جهاز واحد بس.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="type-badge">
+                            <span class="stars-small"><i class="fa-solid fa-star"></i></span>
+                            <span>السكندري (Secondary):</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-body">
+                        <ul>
+                            <li>اللعبة أو البلس بتشتغل بس على اليوزر اللي مشتريالك بس.</li>
+                            <li>مش هتقدر تستخدم اللعبة أو البلس من يوزر تاني على نفس الجهاز.</li>
+                            <li>وكمان محتاج إنترنت دايماً عشان اللعبة تشتغل.</li>
+                            <li>زي البرايماري، برضه بيشتغل على جهاز واحد بس.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="type-badge">
+                            <span class="stars-small"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></span>
+                            <span>الفل (Full Access):</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-body">
+                        <ul>
+                            <li>هنا بقى عندك قول أكسس للأكاونت بالكامل.</li>
+                            <li>تقدر تغير الباسورد وتتحكم فيه زي ما تحب.</li>
+                            <li>وكمان تقدر تغيره مع صحابك، لكن بحد أقصى 3 أجهزة.</li>
+                            <li>واحد برايماري على بلايستيشن 4.</li>
+                            <li>واحد برايماري على بلايستيشن 5.</li>
+                            <li>واحد سكندري على أي جهاز.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span><i class="fa-regular fa-circle-question" style="margin-left: 8px;"></i> ايه الفرق بين البرايماري 5 و البرايماري 4؟</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-body">
+                        <ul>
+                            <li>البرايماري PS5 بيشتغل على بلايستيشن 5 فقط.</li>
+                            <li>البرايماري PS4 بيشتغل على بلايستيشن 4 فقط.</li>
+                            <li>السكندري بيشتغل على الاتنين.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span><i class="fa-regular fa-circle-question" style="margin-left: 8px;"></i> لو انا شاري لعبة سكندري ينفع اشتري بلس سكندري؟</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-body">
+                        <ul>
+                            <li>آه ينفع، بس لازم يكونوا على نفس الاكاونت.</li>
+                            <li>لو اشتريت لعبة سكندري على اكاونت والبلس على اكاونت تاني مش هينفع.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span><i class="fa-regular fa-circle-question" style="margin-left: 8px;"></i> ينفع اشتري حساب سكندري و اغطه برايماري؟</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-body">
+                        <ul>
+                            <li>لأ، مينفعش تغير نوع الحساب بعد الشراء.</li>
+                            <li>لو اشتريت سكندري هيفضل سكندري.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 1.5rem;">
+                <a href="#" style="color: var(--danger); font-size: 0.9rem; display: inline-flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-share-nodes"></i> Share
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================== YOU MAY ALSO LIKE ================== -->
+    <div class="container">
+        <div class="recommendations">
+            <div class="rec-header">
+                <h2 class="rec-title">You May Also Like</h2>
+                <div class="rec-nav">
+                    <button onclick="scrollRec(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button onclick="scrollRec(1)"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+            </div>
+
+            <div class="rec-grid" id="recGrid">
+                <div class="rec-card" onclick="window.location.href='product.html?id=2'">
+                    <div class="rec-image">
+                        <img src="https://images.unsplash.com/photo-1605901309584-818e25960a8f?q=80&w=400&auto=format&fit=crop" alt="PS Plus">
+                        <span class="rec-badge">Sale</span>
+                    </div>
+                    <div class="rec-info">
+                        <h3 class="rec-name">PlayStation Plus 3 Months Essential</h3>
+                        <div class="rec-price-row">
+                            <span class="rec-old-price">LE 400.00 EGP</span>
+                            <span class="rec-price">From LE 200.00 EGP</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rec-card" onclick="window.location.href='product.html?id=3'">
+                    <div class="rec-image">
+                        <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=400&auto=format&fit=crop" alt="FC26 Ultimate">
+                        <span class="rec-badge">Sale</span>
+                    </div>
+                    <div class="rec-info">
+                        <h3 class="rec-name">EA SPORTS FC™26 Ultimate Edition (PS5/PS4)</h3>
+                        <div class="rec-price-row">
+                            <span class="rec-old-price">LE 1,950.00 EGP</span>
+                            <span class="rec-price">From LE 825.00 EGP</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rec-card" onclick="window.location.href='product.html?id=4'">
+                    <div class="rec-image">
+                        <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=400&auto=format&fit=crop" alt="RDR2">
+                    </div>
+                    <div class="rec-info">
+                        <h3 class="rec-name">Red Dead Redemption 2 (PS5/PS4) [Digital account]</h3>
+                        <div class="rec-price-row">
+                            <span class="rec-price">From LE 200.00 EGP</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rec-card" onclick="window.location.href='product.html?id=5'">
+                    <div class="rec-image">
+                        <img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?q=80&w=400&auto=format&fit=crop" alt="PS Plus 1 Month">
+                    </div>
+                    <div class="rec-info">
+                        <h3 class="rec-name">PlayStation Plus 1 Month Essential</h3>
+                        <div class="rec-price-row">
+                            <span class="rec-price">From LE 75.00 EGP</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================== NEWSLETTER ================== -->
+    <div class="newsletter-section">
+        <div class="container">
+            <h2 class="newsletter-title">For Gamers.</h2>
+            <p class="newsletter-desc">Leave your email here to receive all the new exciting games that we deliver every day! 👇</p>
+            <form class="newsletter-form" onsubmit="event.preventDefault(); subscribeNewsletter();">
+                <input type="email" placeholder="Email" required>
+                <button type="submit"><i class="fa-solid fa-arrow-right"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================== FOOTER ================== -->
+    <footer>
+        <div class="container">
+            <div class="footer-social">
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                    <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-grid">
+                <div>
+                    <a href="index.html" class="logo"><i class="fa-solid fa-gamepad"></i> PUBG STORE</a>
+                    <p class="footer-desc">Your ultimate marketplace for premium digital game accounts. Secure, fast, and reliable. Serving gamers across the Middle East since 2020.</p>
+                </div>
+                <div>
+                    <h3 class="footer-title">Quick Links</h3>
+                    <div class="footer-links">
+                        <a href="store.html">Store</a>
+                        <a href="orders.html">Track Order</a>
+                        <a href="wishlist.html">Wishlist</a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="footer-title">Support</h3>
+                    <div class="footer-links">
+                        <a href="#">FAQ & Help</a>
+                        <a href="#">Contact Us</a>
+                        <a href="#">Refund Policy</a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="footer-title">Legal</h3>
+                    <div class="footer-links">
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of Service</a>
+                        <a href="#">Shipping Policy</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <span>© 2026, PUBG STORE</span>
+                    <span style="color: rgba(255,255,255,0.3);">|</span>
+                    <a href="#" style="color: var(--text-muted);">Privacy policy</a>
+                    <a href="#" style="color: var(--text-muted);">Refund policy</a>
+                    <a href="#" style="color: var(--text-muted);">Terms of service</a>
+                    <a href="#" style="color: var(--text-muted);">Shipping policy</a>
+                    <a href="#" style="color: var(--text-muted);">Contact information</a>
+                </div>
+                <div class="payment-icons">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/American_Express_logo_%282018%29.svg/1200px-American_Express_logo_%282018%29.svg.png" alt="Amex">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Google_Pay_Logo.svg/1200px-Google_Pay_Logo.svg.png" alt="GPay">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1200px-Mastercard-logo.svg.png" alt="Mastercard">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/PayPal.svg/1200px-PayPal.svg.png" alt="PayPal">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/1200px-Visa_Inc._logo.svg.png" alt="Visa">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ================== JAVASCRIPT ================== -->
+    <script>
+        /* ================= THEME TOGGLE ================= */
+        const themeBtn = document.getElementById('theme-toggle');
+        const themeIcon = themeBtn.querySelector('i');
+        const root = document.documentElement;
+        
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        root.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+
+        themeBtn.addEventListener('click', () => {
+            const currentTheme = root.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            root.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+
+        function updateThemeIcon(theme) {
+            themeIcon.className = theme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        }
+
+        /* ================= MOBILE UI ================= */
+        const mobileToggle = document.getElementById('mobile-toggle');
+        const navLinks = document.getElementById('nav-links');
+        
+        mobileToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            mobileToggle.querySelector('i').className = navLinks.classList.contains('active') ? 'fa-solid fa-times' : 'fa-solid fa-bars';
+        });
+
+        /* ================= RIPPLE EFFECT ================= */
+        document.body.addEventListener('click', function(e) {
+            const target = e.target.closest('.ripple');
+            if (!target) return;
+            const circle = document.createElement('span');
+            const diameter = Math.max(target.clientWidth, target.clientHeight);
+            const radius = diameter / 2;
+            const rect = target.getBoundingClientRect();
+            circle.style.width = circle.style.height = `${diameter}px`;
+            circle.style.left = `${e.clientX - rect.left - radius}px`;
+            circle.style.top = `${e.clientY - rect.top - radius}px`;
+            circle.classList.add('ripple');
+            const ripple = target.querySelector('.ripple');
+            if (ripple) ripple.remove();
+            target.appendChild(circle);
+            setTimeout(() => circle.remove(), 600);
+        });
+
+        /* ================= GALLERY ================= */
+        function changeImage(thumb) {
+            document.querySelectorAll('.gallery-thumbs img').forEach(img => img.classList.remove('active'));
+            thumb.classList.add('active');
+            document.getElementById('mainImage').src = thumb.src.replace('w=200', 'w=800');
+        }
+
+        /* ================= VERSION SELECTOR ================= */
+        function selectVersion(el) {
+            document.querySelectorAll('#versionTags .info-tag').forEach(tag => tag.classList.remove('active'));
+            el.classList.add('active');
+            
+            const price = el.getAttribute('data-price');
+            const oldPrice = el.getAttribute('data-old');
+            
+            document.getElementById('currentPrice').textContent = `LE ${parseInt(price).toLocaleString()}.00 EGP`;
+            document.getElementById('oldPrice').textContent = `LE ${parseInt(oldPrice).toLocaleString()}.00 EGP`;
+        }
+
+        /* ================= QUANTITY ================= */
+        function updateQty(delta) {
+            const input = document.getElementById('qtyInput');
+            let val = parseInt(input.value) + delta;
+            if (val < 1) val = 1;
+            if (val > 10) val = 10;
+            input.value = val;
+        }
+
+        /* ================= ACCORDION ================= */
+        function toggleAccordion(header) {
+            const item = header.parentElement;
+            const wasActive = item.classList.contains('active');
+            
+            document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('active'));
+            
+            if (!wasActive) {
+                item.classList.add('active');
+            }
+        }
+
+        /* ================= CART & WISHLIST ================= */
+        function addToCart() {
+            const terms = document.getElementById('termsCheck');
+            if (!terms.checked) {
+                alert('Please agree to the Refund Policy & Game Share Terms first.');
+                terms.focus();
+                return;
+            }
+            
+            const btn = document.getElementById('buyBtn');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> Added!';
+            btn.style.background = 'var(--success)';
+            
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                btn.style.background = '';
+            }, 2000);
+            
+            // Update cart badge
+            const badge = document.querySelector('.fa-cart-shopping').nextElementSibling;
+            badge.textContent = parseInt(badge.textContent) + 1;
+        }
+
+        function toggleWishlist() {
+            const badge = document.querySelector('.fa-heart').nextElementSibling;
+            if (badge) {
+                badge.textContent = parseInt(badge.textContent) + 1;
+            }
+            alert('Added to wishlist!');
+        }
+
+        /* ================= NEWSLETTER ================= */
+        function subscribeNewsletter() {
+            alert('Thanks for subscribing! 🎮');
+        }
+
+        /* ================= URL PARAMS ================= */
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');
+        if (productId) {
+            console.log('Loading product ID:', productId);
+            // Here you would fetch from Supabase based on ID
+        }
+    </script>
+</body>
+</html>
